@@ -1,7 +1,0 @@
-tensorflow
-streamlit
-pillow
-numpy
-matplotlib
-scikit-learn
-gdown
