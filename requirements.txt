@@ -4,5 +4,3 @@ pillow
 numpy
 matplotlib
 scikit-learn
-gdown
-pillow
