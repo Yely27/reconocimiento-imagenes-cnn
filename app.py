@@ -3,6 +3,30 @@
 # Aplicación web operativa con Streamlit
 # Ejecutar: streamlit run app.py
 # ============================================================
+import os
+import gdown
+import tensorflow as tf
+import streamlit as st
+
+@st.cache_resource
+def cargar_modelo():
+    # El nombre que tendrá el archivo dentro del servidor de la nube
+    MODEL_PATH = "modelo_final_eurosat.keras"
+    
+    # Si el archivo NO está en el servidor, lo descarga de Google Drive
+    if not os.path.exists(MODEL_PATH):
+        with st.spinner("Descargando el modelo de IA desde Google Drive... Esto solo ocurre la primera vez."):
+            # ID obtenido en el Paso 1 (REEMPLAZA este texto por tu ID real de Drive)
+            id_drive = "1bs48rivfymyaRmm65Ux4kW7Np9J-WRK3" 
+            
+            url_descarga = f'https://drive.google.com/uc?id={id_drive}'
+            gdown.download(url_descarga, MODEL_PATH, quiet=False)
+            
+    # Una vez asegurado el archivo en el servidor, se carga normalmente
+    return tf.keras.models.load_model(MODEL_PATH)
+
+# Llamada a la función
+modelo = cargar_modelo()
 
 # === PARCHE DE COMPATIBILIDAD DE RECONOCIMIENTO DE IMÁGENES ===
 import keras
