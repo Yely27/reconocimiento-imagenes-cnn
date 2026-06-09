@@ -28,29 +28,6 @@ def cargar_modelo():
 # Llamada a la función
 modelo = cargar_modelo()
 
-# === PARCHE DE COMPATIBILIDAD DE RECONOCIMIENTO DE IMÁGENES ===
-import keras
-from keras.src.layers.core import dense
-
-# Guardamos la función de inicialización original de la capa Dense
-original_dense_init = dense.Dense.__init__
-
-# Creamos una función modificada que elimina 'quantization_config' si existe
-def patched_dense_init(self, *args, **kwargs):
-    if 'quantization_config' in kwargs:
-        kwargs.pop('quantization_config') # Lo elimina silenciosamente para evitar el error
-    original_dense_init(self, *args, **kwargs)
-
-# Reemplazamos la función original con nuestro parche
-dense.Dense.__init__ = patched_dense_init
-# ==============================================================
-
-# Aquí continúa tu código normal...
-import tensorflow as tf
-import streamlit as st
-
-
-
 import time
 import numpy as np
 import streamlit as st
