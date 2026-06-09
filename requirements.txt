@@ -4,3 +4,5 @@ pillow
 numpy
 matplotlib
 scikit-learn
+keras
+gdown
