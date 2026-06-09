@@ -1,7 +1,6 @@
 # ============================================================
 # app.py
-# Aplicación web operativa con Streamlit
-# Ejecutar: streamlit run app.py
+# Aplicación web operativa con Streamlit en la nube
 # ============================================================
 
 # === PARCHE DE COMPATIBILIDAD DE RECONOCIMIENTO DE IMÁGENES ===
@@ -21,12 +20,8 @@ def patched_dense_init(self, *args, **kwargs):
 dense.Dense.__init__ = patched_dense_init
 # ==============================================================
 
-# Aquí continúa tu código normal...
-import tensorflow as tf
-import streamlit as st
-
-
-
+import os
+import gdown
 import time
 import numpy as np
 import streamlit as st
@@ -60,6 +55,17 @@ class_names = [
 
 @st.cache_resource
 def cargar_modelo():
+    # === DESCARGA AUTOMÁTICA DESDE GOOGLE DRIVE ===
+    # Si el modelo no está en el servidor de la nube, lo descarga automáticamente
+    if not os.path.exists(MODEL_PATH):
+        with st.spinner("Descargando el modelo de IA desde Google Drive... Esto solo toma un momento la primera vez."):
+            # ⚠️ REEMPLAZA ESTO: Pon aquí adentro el ID de tu archivo compartido de Google Drive
+            id_drive = "1bs48rivfymyaRmm65Ux4kW7Np9J-WRK3" 
+            
+            url_descarga = f'https://drive.google.com/uc?id={id_drive}'
+            gdown.download(url_descarga, MODEL_PATH, quiet=False)
+    # ==============================================
+    
     return tf.keras.models.load_model(MODEL_PATH)
 
 modelo = cargar_modelo()
