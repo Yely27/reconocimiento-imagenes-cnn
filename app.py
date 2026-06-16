@@ -42,7 +42,7 @@ st.set_page_config(
 st.title("Sistema Inteligente de Reconocimiento de Imágenes")
 st.write("Modelo basado en CNN, Transfer Learning, Fine-Tuning y EfficientNetB0.")
 
-MODEL_PATH = "modelo_final_eurosat.keras"
+MODEL_PATH = "modelo_eurosat.tflite"
 IMG_SIZE = 224
 
 class_names = [
