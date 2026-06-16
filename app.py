@@ -1,39 +1,11 @@
-# ============================================================
-# app.py
-# Aplicación web operativa con Streamlit
-# Ejecutar: streamlit run app.py
-# ============================================================
-
-# === PARCHE DE COMPATIBILIDAD DE RECONOCIMIENTO DE IMÁGENES ===
-import keras
-from keras.src.layers.core import dense
-
-# Guardamos la función de inicialización original de la capa Dense
-original_dense_init = dense.Dense.__init__
-
-# Creamos una función modificada que elimina 'quantization_config' si existe
-def patched_dense_init(self, *args, **kwargs):
-    if 'quantization_config' in kwargs:
-        kwargs.pop('quantization_config') # Lo elimina silenciosamente para evitar el error
-    original_dense_init(self, *args, **kwargs)
-
-# Reemplazamos la función original con nuestro parche
-dense.Dense.__init__ = patched_dense_init
-# ==============================================================
-
-# Aquí continúa tu código normal...
-import tensorflow as tf
 import streamlit as st
-
-
-
+import tensorflow as tf
 import time
 import numpy as np
-import streamlit as st
-import tensorflow as tf
 from PIL import Image
 from tensorflow.keras.preprocessing import image
 
+# Configuración de la página
 st.set_page_config(
     page_title="Reconocimiento Inteligente de Imágenes",
     layout="centered"
@@ -42,7 +14,7 @@ st.set_page_config(
 st.title("Sistema Inteligente de Reconocimiento de Imágenes")
 st.write("Modelo basado en CNN, Transfer Learning, Fine-Tuning y EfficientNetB0.")
 
-MODEL_PATH = "modelo_eurosat.tflite"
+MODEL_PATH = "modelo_final_eurosat.keras"
 IMG_SIZE = 224
 
 class_names = [
@@ -58,9 +30,11 @@ class_names = [
     "SeaLake"
 ]
 
+# Modificamos el caché para evitar problemas de hilos con TensorFlow
 @st.cache_resource
 def cargar_modelo():
-    return tf.keras.models.load_model(MODEL_PATH)
+    # Eliminamos el parche antiguo y cargamos de forma nativa
+    return tf.keras.models.load_model(MODEL_PATH, compile=False)
 
 modelo = cargar_modelo()
 
